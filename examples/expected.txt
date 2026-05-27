@@ -1,0 +1,18 @@
+Frequencias de c1:
+x 3
+0 2
+do 2
+else 2
+if 2
+let 2
+module 2
+print 2
+then 2
+where 2
+10 1
+Main 1
+main 1
+
+m: 19
+soma(f1): 24
+similaridade: 0.7917
