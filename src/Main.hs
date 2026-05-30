@@ -31,3 +31,26 @@ run resPath sepPath c1Path c2Path = do
       (mValue, totalF1, score) = similarity freq1 freq2
 
   printReport (sortedFrequencies freq1) mValue totalF1 score
+
+tokenize :: Set Char -> String -> [String]
+tokenize separators = go [] []
+  where
+    go current tokens [] =
+      reverse (finish current tokens)
+    go current tokens (ch : rest)
+      | Set.member ch separators = go [] (finish current tokens) rest
+      | otherwise = go (ch : current) tokens rest
+
+    finish [] tokens = tokens
+    finish current tokens = reverse current : tokens
+
+weightedFrequencies :: Set String -> Set Char -> String -> Map String Int
+weightedFrequencies reservedWords separators content =
+  foldl' addToken Map.empty (tokenize separators content)
+  where
+    addToken frequencies token =
+      Map.insertWith (+) token (tokenWeight token) frequencies
+
+    tokenWeight token
+      | Set.member token reservedWords = 2
+      | otherwise = 1
