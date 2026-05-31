@@ -4,7 +4,8 @@ import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.Map (Map)
 import qualified Data.Map as Map
-import Data.List (foldl')
+import Data.List (foldl', sortBy)
+import Text.Printf (printf)
 import System.Environment (getArgs, getProgName)
 import System.Exit (exitFailure)
 import System.IO (hPutStrLn, stderr)
@@ -57,12 +58,43 @@ weightedFrequencies reservedWords separators content =
     tokenWeight token
       | Set.member token reservedWords = 2
       | otherwise = 1
-
+    
 sortedFrequencies :: Map String Int -> [(String, Int)]
-sortedFrequencies = undefined
+sortedFrequencies =
+  sortBy compareEntry . Map.toList
+  where
+    compareEntry (wordA, freqA) (wordB, freqB) =
+      case compare freqB freqA of
+        EQ -> compare wordA wordB
+        ordering -> ordering
 
 similarity :: Map String Int -> Map String Int -> (Int, Int, Double)
-similarity = undefined
+similarity freq1 freq2 =
+  (mValue, totalF1, score)
+  where
+    totalF1 = sum (Map.elems freq1)
+    mValue =
+      sum
+        [ f1
+        | (word, f1) <- Map.toList freq1,
+          let f2 = Map.findWithDefault 0 word freq2,
+          isSimilarEnough f1 f2
+        ]
+    score
+      | totalF1 == 0 = 0
+      | otherwise = fromIntegral mValue / fromIntegral totalF1
+
+isSimilarEnough :: Int -> Int -> Bool
+isSimilarEnough f1 f2 = 10 * abs (f1 - f2) <= f1
 
 printReport :: [(String, Int)] -> Int -> Int -> Double -> IO ()
-printReport = undefined
+printReport frequencies mValue totalF1 score = do
+  putStrLn "Frequencias de c1:"
+  mapM_ printFrequency frequencies
+  putStrLn ""
+  putStrLn ("m: " ++ show mValue)
+  putStrLn ("soma(f1): " ++ show totalF1)
+  printf "similaridade: %.4f\n" score
+  where
+    printFrequency (word, frequency) =
+      putStrLn (word ++ " " ++ show frequency)
