@@ -57,10 +57,7 @@ weightedFrequencies reservedWords separators content =
     tokenWeight token
       | Set.member token reservedWords = 2
       | otherwise = 1
-
-printReport :: [(String, Int)] -> Int -> Int -> Double -> IO ()
-printReport = undefined
-      
+    
 sortedFrequencies :: Map String Int -> [(String, Int)]
 sortedFrequencies =
   sortBy compareEntry . Map.toList
@@ -87,4 +84,16 @@ similarity freq1 freq2 =
       | otherwise = fromIntegral mValue / fromIntegral totalF1
 
 isSimilarEnough :: Int -> Int -> Bool
-isSimilarEnough f1 f2 = f1 > 0 && f2 > 0
+isSimilarEnough f1 f2 = 10 * abs (f1 - f2) <= f1
+
+printReport :: [(String, Int)] -> Int -> Int -> Double -> IO ()
+printReport frequencies mValue totalF1 score = do
+  putStrLn "Frequencias de c1:"
+  mapM_ printFrequency frequencies
+  putStrLn ""
+  putStrLn ("m: " ++ show mValue)
+  putStrLn ("soma(f1): " ++ show totalF1)
+  printf "similaridade: %.4f\n" score
+  where
+    printFrequency (word, frequency) =
+      putStrLn (word ++ " " ++ show frequency)
