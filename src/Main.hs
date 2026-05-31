@@ -2,6 +2,9 @@ module Main where
 
 import Data.Set (Set)
 import qualified Data.Set as Set
+import Data.Map (Map)
+import qualified Data.Map as Map
+import Data.List (foldl', sortBy)
 import System.Environment (getArgs, getProgName)
 import System.Exit (exitFailure)
 import System.IO (hPutStrLn, stderr)
@@ -54,6 +57,9 @@ weightedFrequencies reservedWords separators content =
     tokenWeight token
       | Set.member token reservedWords = 2
       | otherwise = 1
+
+printReport :: [(String, Int)] -> Int -> Int -> Double -> IO ()
+printReport = undefined
       
 sortedFrequencies :: Map String Int -> [(String, Int)]
 sortedFrequencies =
@@ -79,3 +85,6 @@ similarity freq1 freq2 =
     score
       | totalF1 == 0 = 0
       | otherwise = fromIntegral mValue / fromIntegral totalF1
+
+isSimilarEnough :: Int -> Int -> Bool
+isSimilarEnough f1 f2 = f1 > 0 && f2 > 0
