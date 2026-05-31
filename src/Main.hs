@@ -2,6 +2,9 @@ module Main where
 
 import Data.Set (Set)
 import qualified Data.Set as Set
+import Data.Map (Map)
+import qualified Data.Map as Map
+import Data.List (foldl')
 import System.Environment (getArgs, getProgName)
 import System.Exit (exitFailure)
 import System.IO (hPutStrLn, stderr)
@@ -54,3 +57,12 @@ weightedFrequencies reservedWords separators content =
     tokenWeight token
       | Set.member token reservedWords = 2
       | otherwise = 1
+
+sortedFrequencies :: Map String Int -> [(String, Int)]
+sortedFrequencies = undefined
+
+similarity :: Map String Int -> Map String Int -> (Int, Int, Double)
+similarity = undefined
+
+printReport :: [(String, Int)] -> Int -> Int -> Double -> IO ()
+printReport = undefined
