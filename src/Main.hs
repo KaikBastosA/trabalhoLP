@@ -2,6 +2,9 @@ module Main where
 
 import Data.Set (Set)
 import qualified Data.Set as Set
+import Data.Map (Map)
+import qualified Data.Map as Map
+import Data.List (foldl')
 import System.Environment (getArgs, getProgName)
 import System.Exit (exitFailure)
 import System.IO (hPutStrLn, stderr)
@@ -54,28 +57,12 @@ weightedFrequencies reservedWords separators content =
     tokenWeight token
       | Set.member token reservedWords = 2
       | otherwise = 1
-      
+
 sortedFrequencies :: Map String Int -> [(String, Int)]
-sortedFrequencies =
-  sortBy compareEntry . Map.toList
-  where
-    compareEntry (wordA, freqA) (wordB, freqB) =
-      case compare freqB freqA of
-        EQ -> compare wordA wordB
-        ordering -> ordering
+sortedFrequencies = undefined
 
 similarity :: Map String Int -> Map String Int -> (Int, Int, Double)
-similarity freq1 freq2 =
-  (mValue, totalF1, score)
-  where
-    totalF1 = sum (Map.elems freq1)
-    mValue =
-      sum
-        [ f1
-        | (word, f1) <- Map.toList freq1,
-          let f2 = Map.findWithDefault 0 word freq2,
-          isSimilarEnough f1 f2
-        ]
-    score
-      | totalF1 == 0 = 0
-      | otherwise = fromIntegral mValue / fromIntegral totalF1
+similarity = undefined
+
+printReport :: [(String, Int)] -> Int -> Int -> Double -> IO ()
+printReport = undefined
